@@ -1,12 +1,54 @@
-
-/* 
-
-    You can write your own styles here...
+.Main{
+    width: 500px;
+    min-height: 500px;
+    padding: 10px 20px ;
+    background-color: #00ff80;
+    border: none;
+    border-radius: 5%;
+    margin-top: 30px;
+}
+.Header{
+    display: flex;
+    justify-content: center;
+    color: #ffF;
+}
+.form{
+    display: flex;
+    justify-content: space-between ;
+    margin: 15px 0 0 0;
+}
+.form-input{
+    width: 370px;
+    border-radius: 10px;
+    background-color: white;
+}
+.Lista1{
+    width: 100%;
+    margin: 20px auto 0;
     
+}
+.List{
+    font-size: 20px;
+    margin: 10px 20px 10px 0;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
     
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
-
-*/
+}
+.pendiente{
+    height: 75%;
+    display: flex;
+    align-items: flex-end;
+}
+.todo-button{
+    border-radius: 10px;
+    background-color: white;
+}
+.todo-button2{
+    border-radius: 10px;
+    font-size: 10px;
+    background-color: rgb(200, 24, 24);
+    color: black;
+    border: none;
+    width: 10%;
+}
