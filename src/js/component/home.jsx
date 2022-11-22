@@ -1,82 +1,113 @@
-import React, { useState, useEffect} from "react";
-import Header from "./encabezado.jsx";
-import Form from "./formulario.jsx";
-import List from "./lista.jsx";
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState, useEffect } from "react";
+import { Todo } from "./todo.jsx";
 
-//create your first component
-function Home() {
-  const [listaTareas, setlistaTareas] = useState([]);
+const Home = () => {
+	const [todos, setTodos] = useState([]);
 
-useEffect(()=>{
-	fetch("https://assets.breatheco.de/apis/fake/todos/user/kevinsavir")
-  .then(response => response.json())
-  .then(result => setlistaTareas(result))
-  .catch(error => console.log('error', error));
-},[]);
+	const [newTodo, setNewTodo] = useState("");
 
-  var requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify([...listaTareas]),
-    redirect: "follow"
-  };
+	const handleClick = async (newTodo) => {
+		if (newTodo.label === "") return;
+		var requestOptions = {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify([...todos, newTodo]),
+			redirect: "follow",
+		};
 
-  fetch(
-    "http://assets.breatheco.de/apis/fake/todos/user/kevinsavir",
-    requestOptions
-  )
-    .then((response) => response.json())
-    .then((result) => console.log(result))
-    .catch((error) => console.log("error", error));
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/kevinsavir",
+			requestOptions
+		)
+			.then((response) => response.json())
+			.then((result) => console.log(result))
+			.catch((error) => console.log("error", error));
 
-  const nuevaTarea = (actividad) => {
-    console.log(actividad);
-    setlistaTareas([actividad, ...listaTareas]);
-  };
+		setTodos([...todos, newTodo]);
+	};
 
-  const borrar = (id) => {
-    const listaFiltrada = listaTareas.filter((e, index) => index !== id);
-    setlistaTareas(listaFiltrada);
+	//const result = words.filter(word => word.length > 6);
+	const eliminate = (index) => {
+		const filteredTodos = todos.filter((newString, i) => i !== index);
+		setTodos(filteredTodos);
 
-	var requestOptions = {
-		method: "PUT",
-		headers: {
-		  "Content-Type": "application/json"
-		},
-		body: JSON.stringify([...listaFiltrada]),
-		redirect: "follow"
-	  };
-	
-	  fetch(
-		"http://assets.breatheco.de/apis/fake/todos/user/kevinsavir",
-		requestOptions
-	  )
-		.then((response) => response.json())
-		.then((result) => console.log(result))
-		.catch((error) => console.log("error", error));
-  };
+		var requestOptions = {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(filteredTodos),
+			redirect: "follow",
+		};
 
-  
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/kevinsavir",
+			requestOptions
+		)
+			.then((response) => response.json())
+			.then((result) => console.log(result))
+			.catch((error) => console.log("error", error));
+	};
 
-  return (
-    <div className="Main container">
-      <Header />
-      <Form nuevaTarea={nuevaTarea} />
-      <div className="Lista1">
-        {listaTareas.map((e, index) => (
-          <List key={index} list={e} borrar={borrar} id={index} />
-        ))}
-      </div>
-      <div className="pendiente">
-        <h6>Tareas pendientes: {listaTareas.length}</h6>
-      </div>
-    </div>
-  );
-}
+	useEffect(() => {
+		var requestOptions = {
+			method: "GET",
+			redirect: "follow",
+		};
+
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/kevinsavir",
+			requestOptions
+		)
+			.then((response) => response.json())
+			.then((result) => {
+				if (result.msg) {
+					return;
+				} else {
+					setTodos(result);
+				}
+			})
+			.catch((error) => console.log("error", error));
+	}, []);
+
+	return (
+		<div className="to-do text-center border border-danger">
+			<div>
+				<h1 id="title"> To-Do list</h1>
+
+				<input
+					className="rounded-start"
+					placeholder="Agrega una tarea"
+					onChange={(e) =>
+						setNewTodo({ label: e.target.value, done: false })
+					}
+				/>
+
+				<button
+					className="rounded-end"
+					onClick={() => handleClick(newTodo)}>
+					<i className="fas fa-check"></i>
+				</button>
+
+				{todos.length > 0 ? (
+					todos.map((todo, index) => {
+						return (
+							<Todo
+								key={index}
+								todo={todo}
+								eliminate={eliminate}
+								index={index}
+							/>
+						);
+					})
+				) : (
+					<h5>No hay mas tareas</h5>
+				)}
+			</div>
+		</div>
+	);
+};
 
 export default Home;
-
